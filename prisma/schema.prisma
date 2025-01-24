@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+model AppUser {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  folders   Folder[]
+  files     File[]
+}
+
+model Folder {
+  id       Int      @id @default(autoincrement())
+  name     String
+  parentId Int? // Nullable for root folders
+  userId   Int
+  parent   Folder?  @relation("FolderToParent", fields: [parentId], references: [id], onDelete: Cascade)
+  children Folder[] @relation("FolderToParent")
+  files    File[] // Files in this folder
+  user     AppUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([name, parentId, userId]) // Ensure unique folder names under the same parent and user
+}
+
+model File {
+  id       Int     @id @default(autoincrement())
+  name     String
+  path     String // Path or unique identifier for the file
+  folderId Int // Foreign key to Folder
+  userId   Int // Foreign key to User
+  folder   Folder  @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  user     AppUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
