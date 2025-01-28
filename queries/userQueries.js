@@ -1,15 +1,24 @@
-import prisma from '../prisma/db';
+import prisma from '../prisma/db.js';
 
 async function getUserByEmail(email) {
-  return prisma.user.findUnique({
+  return prisma.appUser.findUnique({
     where: { email },
   });
 }
 
 async function getUserById(id) {
-  return prisma.user.findUnique({
+  return prisma.appUser.findUnique({
     where: { id },
   });
 }
 
-export { getUserByEmail, getUserById };
+async function createUser({ email, password }) {
+  return prisma.appUser.create({
+    data: {
+      email,
+      password,
+    },
+  });
+}
+
+export { getUserByEmail, getUserById, createUser };
