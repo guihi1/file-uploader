@@ -69,9 +69,13 @@ const signInPost = passport.authenticate('local', {
   failureRedirect: '/sign-in',
 });
 
-const logOut = (req, res) => {
-  req.logout();
-  res.redirect('/');
+const logOut = (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('/');
+  });
 };
 
 export {
