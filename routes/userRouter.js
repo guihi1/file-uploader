@@ -13,4 +13,10 @@ router.post(
 
 router.get('/sign-in', userController.signInGet);
 
+router.post(
+  '/sign-in',
+  userController.validateSignIn,
+  userController.signInPost,
+);
+
 export default router;

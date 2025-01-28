@@ -48,4 +48,32 @@ const signInGet = (req, res) => {
   res.render('user_form', { title: 'Sign In', user: req.user });
 };
 
-export { signUpGet, signInGet, validateSignUp, signUpPost };
+const validateSignIn = [
+  body('email')
+    .trim()
+    .isEmail()
+    .withMessage('Invalid email')
+    .custom(async (email) => {
+      const existingUser = await userQueries.getUserByEmail(email);
+
+      if (!existingUser) {
+        throw new Error('Email is not registered');
+      }
+
+      return true;
+    }),
+];
+
+const signInPost = passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/sign-in',
+});
+
+export {
+  signUpGet,
+  signInGet,
+  validateSignUp,
+  signUpPost,
+  validateSignIn,
+  signInPost,
+};
