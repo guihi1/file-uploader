@@ -19,4 +19,6 @@ router.post(
   userController.signInPost,
 );
 
+router.get('/log-out', userController.signOut);
+
 export default router;

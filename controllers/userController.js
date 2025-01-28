@@ -69,6 +69,11 @@ const signInPost = passport.authenticate('local', {
   failureRedirect: '/sign-in',
 });
 
+const logOut = (req, res) => {
+  req.logout();
+  res.redirect('/');
+};
+
 export {
   signUpGet,
   signInGet,
@@ -76,4 +81,5 @@ export {
   signUpPost,
   validateSignIn,
   signInPost,
+  logOut,
 };
