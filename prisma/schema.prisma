@@ -43,11 +43,12 @@ model Folder {
 }
 
 model File {
-  id       Int     @id @default(autoincrement())
-  name     String
-  path     String // Path or unique identifier for the file
-  folderId Int // Foreign key to Folder
-  userId   Int // Foreign key to User
-  folder   Folder  @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  user     AppUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           Int      @id @default(autoincrement())
+  name         String
+  path         String // Path or unique identifier for the file
+  folderId     Int // Foreign key to Folder
+  userId       Int // Foreign key to User
+  folder       Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  user         AppUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastModified DateTime
 }
