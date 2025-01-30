@@ -65,7 +65,7 @@ const validateSignIn = [
 ];
 
 const signInPost = passport.authenticate('local', {
-  successRedirect: '/',
+  successRedirect: '/folder/inbox',
   failureRedirect: '/sign-in',
 });
 
