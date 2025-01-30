@@ -35,4 +35,35 @@ async function createFolder(name, parentId, userId) {
   });
 }
 
-export { getFolderById, createFolder, getRootFolder, getSubfolders };
+async function getFolderPath(folderId) {
+  let folderPath = [];
+  let currentFolder = await prisma.folder.findUnique({
+    where: { id: folderId },
+    select: { id: true, name: true, parentId: true },
+  });
+
+  while (currentFolder && currentFolder.parentId) {
+    folderPath.push({
+      id: currentFolder.id,
+      name: currentFolder.name,
+      url: `/folder/${currentFolder.id}`,
+    });
+
+    currentFolder = await prisma.folder.findUnique({
+      where: { id: currentFolder.parentId },
+      select: { id: true, name: true, parentId: true },
+    });
+  }
+
+  return folderPath.reverse();
+}
+
+export default getFolderPath;
+
+export {
+  getFolderById,
+  createFolder,
+  getRootFolder,
+  getSubfolders,
+  getFolderPath,
+};

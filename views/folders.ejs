@@ -18,6 +18,27 @@
         <%= folder.name %>
       </h1>
 
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/folder/my-files">My Files</a>
+          </li>
+          <% folderPath.forEach((item, index)=> { %>
+            <% if (index===folderPath.length - 1) { %>
+              <li class="breadcrumb-item active" aria-current="page">
+                <%= item.name %>
+              </li>
+              <% } else { %>
+                <li class="breadcrumb-item">
+                  <a href="<%= item.url %>">
+                    <%= item.name %>
+                  </a>
+                </li>
+                <% } %>
+                  <% }); %>
+        </ol>
+      </nav>
+
       <!-- Buttons to trigger modals -->
       <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createFolderModal">Create New
         Folder</button>
