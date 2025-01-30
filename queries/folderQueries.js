@@ -17,4 +17,14 @@ async function getSubfolders(folderId) {
   });
 }
 
-export { getRootFolder, getSubfolders };
+async function createFolder(name, parentId, userId) {
+  return prisma.folder.create({
+    data: {
+      name,
+      parentId,
+      userId,
+    },
+  });
+}
+
+export { createFolder, getRootFolder, getSubfolders };
