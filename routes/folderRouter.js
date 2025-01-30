@@ -3,8 +3,25 @@ import * as folderController from '../controllers/folderController.js';
 
 const router = express.Router();
 
-router.get('/folder/inbox', folderController.folderInboxGet);
+const ensureAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/sign-in');
+};
+
+router.get(
+  '/folder/inbox',
+  ensureAuthenticated,
+  folderController.folderInboxGet,
+);
 
 router.get('/folder/:folderId');
+
+router.post(
+  '/folder/create',
+  ensureAuthenticated,
+  folderController.folderCreatePost,
+);
 
 export default router;
