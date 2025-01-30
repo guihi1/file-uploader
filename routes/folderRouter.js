@@ -16,7 +16,11 @@ router.get(
   folderController.folderInboxGet,
 );
 
-router.get('/folder/:folderId');
+router.get(
+  '/folder/:folderId',
+  ensureAuthenticated,
+  folderController.folderGet,
+);
 
 router.post(
   '/folder/create',

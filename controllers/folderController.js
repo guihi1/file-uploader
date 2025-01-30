@@ -26,6 +26,31 @@ const folderInboxGet = async (req, res) => {
   }
 };
 
+const folderGet = async (req, res) => {
+  try {
+    const { folderId } = req.params;
+    const folder = await folderQueries.getFolderById(parseInt(folderId, 10));
+
+    if (!folder) {
+      return res.status(404).json({ error: 'Folder not found' });
+    }
+
+    const subfolders = await folderQueries.getSubfolders(folder.id);
+    const files = await fileQueries.getAllFilesInFolder(folder.id);
+
+    res.render('folders', {
+      title: 'Inbox',
+      user: req.user,
+      folder: folder,
+      subfolders,
+      files,
+    });
+  } catch (err) {
+    console.error('Error fetching folder:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 const folderCreatePost = async (req, res) => {
   const { name, parentId } = req.body;
   const parsedParentId = parentId ? parseInt(parentId, 10) : null;
@@ -48,4 +73,4 @@ const folderCreatePost = async (req, res) => {
   }
 };
 
-export { folderCreatePost, folderInboxGet };
+export { folderCreatePost, folderInboxGet, folderGet };

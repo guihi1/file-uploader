@@ -9,6 +9,14 @@ async function getRootFolder(userId) {
   });
 }
 
+async function getFolderById(folderId) {
+  return prisma.folder.findUnique({
+    where: {
+      id: folderId,
+    },
+  });
+}
+
 async function getSubfolders(folderId) {
   return prisma.folder.findMany({
     where: {
@@ -27,4 +35,4 @@ async function createFolder(name, parentId, userId) {
   });
 }
 
-export { createFolder, getRootFolder, getSubfolders };
+export { getFolderById, createFolder, getRootFolder, getSubfolders };
