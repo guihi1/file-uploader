@@ -1,35 +1,14 @@
 import * as folderQueries from '../queries/folderQueries.js';
 import * as fileQueries from '../queries/fileQueries.js';
-import * as userQueries from '../queries/userQueries.js';
-
-const rootFolderGet = async (req, res) => {
-  try {
-    const rootFolder = await folderQueries.getRootFolder(req.user.id);
-
-    if (!rootFolder) {
-      return res.status(404).json({ error: 'Root folder not found' });
-    }
-
-    const subfolders = await folderQueries.getSubfolders(rootFolder.id);
-    const files = await fileQueries.getAllFilesInFolder(rootFolder.id);
-
-    res.render('folders', {
-      title: 'My Files',
-      user: req.user,
-      folder: rootFolder,
-      subfolders,
-      files,
-    });
-  } catch (err) {
-    console.error('Error fetching root folder:', err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
 
 const folderGet = async (req, res) => {
   try {
-    const { folderId } = req.params;
-    const folder = await folderQueries.getFolderById(parseInt(folderId, 10));
+    const folderId = req.params.folderId
+      ? parseInt(req.params.folderId, 10)
+      : null;
+    const folder = folderId
+      ? await folderQueries.getFolderById(folderId)
+      : await folderQueries.getRootFolder(req.user.id);
 
     if (!folder) {
       return res.status(404).json({ error: 'Folder not found' });
@@ -37,11 +16,13 @@ const folderGet = async (req, res) => {
 
     const subfolders = await folderQueries.getSubfolders(folder.id);
     const files = await fileQueries.getAllFilesInFolder(folder.id);
+    const folderPath = await folderQueries.getFolderPath(folder.id);
 
     res.render('folders', {
-      title: 'Inbox',
+      title: folderId ? folder.name : 'My Files',
       user: req.user,
-      folder: folder,
+      folder,
+      folderPath,
       subfolders,
       files,
     });
@@ -73,4 +54,4 @@ const folderCreatePost = async (req, res) => {
   }
 };
 
-export { folderCreatePost, rootFolderGet, folderGet };
+export { folderCreatePost, folderGet };
