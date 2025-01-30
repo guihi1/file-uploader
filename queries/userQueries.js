@@ -19,7 +19,7 @@ async function createUser({ email, password }) {
       password,
       folders: {
         create: {
-          name: 'Inbox',
+          name: 'My Files',
           parentId: null,
         },
       },

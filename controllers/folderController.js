@@ -2,7 +2,7 @@ import * as folderQueries from '../queries/folderQueries.js';
 import * as fileQueries from '../queries/fileQueries.js';
 import * as userQueries from '../queries/userQueries.js';
 
-const folderInboxGet = async (req, res) => {
+const rootFolderGet = async (req, res) => {
   try {
     const rootFolder = await folderQueries.getRootFolder(req.user.id);
 
@@ -14,14 +14,14 @@ const folderInboxGet = async (req, res) => {
     const files = await fileQueries.getAllFilesInFolder(rootFolder.id);
 
     res.render('folders', {
-      title: 'Inbox',
+      title: 'My Files',
       user: req.user,
       folder: rootFolder,
       subfolders,
       files,
     });
   } catch (err) {
-    console.error('Error fetching inbox folder:', err);
+    console.error('Error fetching root folder:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -66,11 +66,11 @@ const folderCreatePost = async (req, res) => {
       return res.status(500).json({ error: 'Error creating folder' });
     }
 
-    return res.redirect('/folder/inbox');
+    return res.redirect(`/folder/${parentId}`);
   } catch (err) {
     console.error('Error creating folder:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-export { folderCreatePost, folderInboxGet, folderGet };
+export { folderCreatePost, rootFolderGet, folderGet };

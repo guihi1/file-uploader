@@ -11,9 +11,9 @@ const ensureAuthenticated = (req, res, next) => {
 };
 
 router.get(
-  '/folder/inbox',
+  '/folder/my-files',
   ensureAuthenticated,
-  folderController.folderInboxGet,
+  folderController.rootFolderGet,
 );
 
 router.get(
