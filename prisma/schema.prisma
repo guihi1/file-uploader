@@ -50,5 +50,5 @@ model File {
   userId       Int // Foreign key to User
   folder       Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
   user         AppUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lastModified DateTime
+  lastModified DateTime @default(now())
 }
