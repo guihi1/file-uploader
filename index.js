@@ -1,5 +1,8 @@
 import Express from 'express';
 import userRouter from './routes/userRouter.js';
+import indexRouter from './routes/indexRouter.js';
+import folderRouter from './routes/folderRouter.js';
+import fileRouter from './routes/fileRouter.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import session from 'express-session';
@@ -41,6 +44,9 @@ app.use(passport.session());
 configurePassport(passport);
 
 app.use('/', userRouter);
+app.use('/', indexRouter);
+app.use('/', folderRouter);
+app.use('/', fileRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
