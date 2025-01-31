@@ -10,11 +10,7 @@ const ensureAuthenticated = (req, res, next) => {
   res.redirect('/sign-in');
 };
 
-router.get(
-  '/folder/my-files',
-  ensureAuthenticated,
-  folderController.rootFolderGet,
-);
+router.get('/folder/my-files', ensureAuthenticated, folderController.folderGet);
 
 router.get(
   '/folder/:folderId',
