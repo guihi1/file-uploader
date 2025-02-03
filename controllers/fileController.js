@@ -1,4 +1,6 @@
 import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import fs from 'fs';
 import * as fileQueries from '../queries/fileQueries.js';
 
@@ -52,4 +54,34 @@ const fileGet = (req, res) => {
   res.download(`./uploads/${path}`);
 };
 
-export { uploadFilePost, fileGet };
+const deleteFile = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const file = await fileQueries.getFileById(parseInt(id, 10));
+
+    if (!file) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
+    const filePath = path.join(__dirname, '../uploads/', file.path);
+
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    } else {
+      console.warn(`File not found: ${filePath}`);
+    }
+
+    await fileQueries.deleteFile(file.id);
+
+    res.redirect(`/folder/${file.folderId}`);
+  } catch (err) {
+    console.error('Error deleting file:', err);
+    res.status(500).json({ error: 'Error deleting file' });
+  }
+};
+
+export { uploadFilePost, fileGet, deleteFile };

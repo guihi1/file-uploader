@@ -1,5 +1,13 @@
 import prisma from '../prisma/db.js';
 
+async function getFileById(fileId) {
+  return prisma.file.findUnique({
+    where: {
+      id: fileId,
+    },
+  });
+}
+
 async function getAllFilesInFolder(folderId) {
   return prisma.file.findMany({
     where: {
@@ -27,4 +35,12 @@ async function createFile({ name, path, userId, folderId }) {
   });
 }
 
-export { getAllFilesInFolder, createFile };
+async function deleteFile(fileId) {
+  return await prisma.file.delete({
+    where: {
+      id: fileId,
+    },
+  });
+}
+
+export { getAllFilesInFolder, createFile, deleteFile, getFileById };

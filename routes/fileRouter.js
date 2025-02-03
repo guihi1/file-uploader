@@ -7,4 +7,6 @@ router.post('/file/upload', fileController.uploadFilePost);
 
 router.get('/uploads/:path', fileController.fileGet);
 
+router.post('/delete/:id', fileController.deleteFile);
+
 export default router;
