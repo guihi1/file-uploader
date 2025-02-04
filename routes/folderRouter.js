@@ -30,4 +30,10 @@ router.post(
   folderController.folderDelete,
 );
 
+router.post(
+  '/folder/rename/:id',
+  ensureAuthenticated,
+  folderController.folderRename,
+);
+
 export default router;

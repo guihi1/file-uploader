@@ -57,13 +57,22 @@
                 </svg>
                 <%= subfolder.name %>
               </a>
-              <a href="#" class="btn btn-link btn-sm" data-bs-toggle="modal" data-bs-target="#deleteFolderModal"
-                data-folder-name="<%= subfolder.name %>" data-folder-id="<%= subfolder.id %>">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                  <path fill="currentColor"
-                    d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z" />
-                </svg>
-              </a>
+              <div>
+                <a href="#" class="btn btn-link btn-sm" data-bs-toggle="modal" data-bs-target="#renameFolderModal"
+                  data-folder-name-rename="<%= subfolder.name %>" data-folder-id-rename="<%= subfolder.id %>">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="currentColor"
+                      d="m15 16l-4 4h10v-4zm-2.94-8.81L3 16.25V20h3.75l9.06-9.06zm6.65.85c.39-.39.39-1.04 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83l3.75 3.75z" />
+                  </svg> </a>
+
+                <a href="#" class="btn btn-link btn-sm" data-bs-toggle="modal" data-bs-target="#deleteFolderModal"
+                  data-folder-name="<%= subfolder.name %>" data-folder-id="<%= subfolder.id %>">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="currentColor"
+                      d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z" />
+                  </svg>
+                </a>
+              </div>
             </li>
             <% }) %>
 
@@ -101,8 +110,29 @@
                     <% } %>
       </ul>
 
+      <!-- Rename Folder Confirmation Modal -->
+      <div class="modal fade" id="renameFolderModal" tabindex="-1" aria-labelledby="renameFolderModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="renameFolderModalLabel">Rename Folder</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Rename folder "<span id="folderToRenameName"></span>" to:</p>
+              <form id="renameFolderForm" method="POST">
+                <input type="text" class="form-control mb-3" id="folderName" name="name" required>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" form="renameFolderForm">Rename</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <hr>
       <!-- Delete Folder Confirmation Modal -->
       <div class="modal fade" id="deleteFolderModal" tabindex="-1" aria-labelledby="deleteModalLabel"
         aria-hidden="true">
@@ -118,7 +148,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <form id="deleteForm" method="POST">
+              <form id="deleteFileForm" method="POST">
                 <button type="submit" class="btn btn-danger">Delete</button>
               </form>
             </div>
@@ -199,15 +229,15 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        let deleteModal = document.getElementById("deleteModal");
+        let deleteFileModal = document.getElementById("deleteModal");
 
-        deleteModal.addEventListener("show.bs.modal", function (event) {
+        deleteFileModal.addEventListener("show.bs.modal", function (event) {
           let button = event.relatedTarget;
           let fileName = button.getAttribute("data-file-name");
           let fileId = button.getAttribute("data-file-id");
 
           document.getElementById("fileToDeleteName").textContent = fileName;
-          document.getElementById("deleteForm").action = "/delete/" + fileId;
+          document.getElementById("deleteFileForm").action = "/delete/" + fileId;
         });
       });
 
@@ -220,7 +250,20 @@
           let folderId = button.getAttribute("data-folder-id");
 
           document.getElementById("folderToDeleteName").textContent = folderName;
-          document.getElementById("deleteForm").action = "/folder/delete/" + folderId;
+          document.getElementById("deleteFolderForm").action = "/folder/delete/" + folderId;
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        let renameFolderModal = document.getElementById("renameFolderModal");
+
+        renameFolderModal.addEventListener("show.bs.modal", function (event) {
+          let button = event.relatedTarget;
+          let folderName = button.getAttribute("data-folder-name-rename");
+          let folderId = button.getAttribute("data-folder-id-rename");
+
+          document.getElementById("folderToRenameName").textContent = folderName;
+          document.getElementById("renameFolderForm").action = "/folder/rename/" + folderId;
         });
       });
     </script>

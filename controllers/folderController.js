@@ -81,4 +81,24 @@ const folderDelete = async (req, res) => {
   }
 };
 
-export { folderCreatePost, folderGet, folderDelete };
+const folderRename = async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  try {
+    const folder = await folderQueries.getFolderById(parseInt(id, 10));
+
+    if (!folder) {
+      return res.status(404).json({ error: 'Folder not found' });
+    }
+
+    await folderQueries.renameFolder(folder.id, name);
+
+    res.redirect(`/folder/${folder.parentId}`);
+  } catch (err) {
+    console.error('Error renaming folder:', err);
+    res.status(500).json({ error: 'Error renaming folder' });
+  }
+};
+
+export { folderCreatePost, folderGet, folderDelete, folderRename };

@@ -66,6 +66,17 @@ async function deleteFolder(folderId) {
   });
 }
 
+async function renameFolder(folderId, name) {
+  return await prisma.folder.update({
+    where: {
+      id: folderId,
+    },
+    data: {
+      name,
+    },
+  });
+}
+
 export {
   getFolderById,
   createFolder,
@@ -73,4 +84,5 @@ export {
   getSubfolders,
   getFolderPath,
   deleteFolder,
+  renameFolder,
 };
