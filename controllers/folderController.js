@@ -1,3 +1,4 @@
+import fs from 'fs';
 import * as folderQueries from '../queries/folderQueries.js';
 import * as fileQueries from '../queries/fileQueries.js';
 
@@ -54,4 +55,30 @@ const folderCreatePost = async (req, res) => {
   }
 };
 
-export { folderCreatePost, folderGet };
+const folderDelete = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const files = await fileQueries.getAllFilesInFolder(parseInt(id, 10));
+
+    files.forEach(async (file) => {
+      if (fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+      }
+    });
+
+    const folder = await folderQueries.getFolderById(parseInt(id, 10));
+
+    if (!folder) {
+      return res.status(404).json({ error: 'Folder not found' });
+    }
+
+    await folderQueries.deleteFolder(folder.id);
+
+    res.redirect(`/folder/${folder.parentId}`);
+  } catch (err) {
+    console.error('Error deleting folder:', err);
+    res.status(500).json({ error: 'Error deleting folder' });
+  }
+};
+
+export { folderCreatePost, folderGet, folderDelete };

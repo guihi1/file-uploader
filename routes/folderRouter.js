@@ -24,4 +24,10 @@ router.post(
   folderController.folderCreatePost,
 );
 
+router.post(
+  '/folder/delete/:id',
+  ensureAuthenticated,
+  folderController.folderDelete,
+);
+
 export default router;

@@ -57,6 +57,13 @@
                 </svg>
                 <%= subfolder.name %>
               </a>
+              <a href="#" class="btn btn-link btn-sm" data-bs-toggle="modal" data-bs-target="#deleteFolderModal"
+                data-folder-name="<%= subfolder.name %>" data-folder-id="<%= subfolder.id %>">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="currentColor"
+                    d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z" />
+                </svg>
+              </a>
             </li>
             <% }) %>
 
@@ -96,7 +103,30 @@
 
 
       <hr>
-      <!-- Delete Confirmation Modal -->
+      <!-- Delete Folder Confirmation Modal -->
+      <div class="modal fade" id="deleteFolderModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete the folder "<span id="folderToDeleteName"></span>" and all content
+                inside it?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <form id="deleteForm" method="POST">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete File Confirmation Modal -->
       <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -178,6 +208,19 @@
 
           document.getElementById("fileToDeleteName").textContent = fileName;
           document.getElementById("deleteForm").action = "/delete/" + fileId;
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        let deleteFolderModal = document.getElementById("deleteFolderModal");
+
+        deleteFolderModal.addEventListener("show.bs.modal", function (event) {
+          let button = event.relatedTarget;
+          let folderName = button.getAttribute("data-folder-name");
+          let folderId = button.getAttribute("data-folder-id");
+
+          document.getElementById("folderToDeleteName").textContent = folderName;
+          document.getElementById("deleteForm").action = "/folder/delete/" + folderId;
         });
       });
     </script>

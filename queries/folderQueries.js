@@ -58,7 +58,13 @@ async function getFolderPath(folderId) {
   return folderPath.reverse();
 }
 
-export default getFolderPath;
+async function deleteFolder(folderId) {
+  return await prisma.folder.delete({
+    where: {
+      id: folderId,
+    },
+  });
+}
 
 export {
   getFolderById,
@@ -66,4 +72,5 @@ export {
   getRootFolder,
   getSubfolders,
   getFolderPath,
+  deleteFolder,
 };
