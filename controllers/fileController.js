@@ -1,6 +1,4 @@
 import multer from 'multer';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import fs from 'fs';
 import * as fileQueries from '../queries/fileQueries.js';
 
@@ -64,15 +62,10 @@ const deleteFile = async (req, res) => {
       return res.status(404).json({ error: 'File not found' });
     }
 
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-
-    const filePath = path.join(__dirname, '../uploads/', file.path);
-
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+    if (fs.existsSync(file.path)) {
+      fs.unlinkSync(file.path);
     } else {
-      console.warn(`File not found: ${filePath}`);
+      console.warn(`File not found: ${file.path}`);
     }
 
     await fileQueries.deleteFile(file.id);
