@@ -77,7 +77,19 @@ async function renameFolder(folderId, name) {
   });
 }
 
+async function changeParentFolder(folderId, parentId) {
+  return await prisma.folder.update({
+    where: {
+      id: folderId,
+    },
+    data: {
+      parentId,
+    },
+  });
+}
+
 export {
+  changeParentFolder,
   getFolderById,
   createFolder,
   getRootFolder,

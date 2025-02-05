@@ -101,4 +101,27 @@ const folderRename = async (req, res) => {
   }
 };
 
-export { folderCreatePost, folderGet, folderDelete, folderRename };
+const moveItem = async (req, res) => {
+  try {
+    const { itemId, itemType, targetFolderId } = req.body;
+
+    if (itemType === 'file') {
+      await fileQueries.changeFileFolder(
+        parseInt(itemId),
+        parseInt(targetFolderId),
+      );
+    } else if (itemType === 'folder') {
+      await folderQueries.changeParentFolder(
+        parseInt(itemId),
+        parseInt(targetFolderId),
+      );
+    }
+
+    res.redirect(`/folder/my-items`);
+  } catch (err) {
+    console.error('Error moving item:', err);
+    res.status(500).json({ error: 'Error moving item' });
+  }
+};
+
+export { folderCreatePost, folderGet, folderDelete, folderRename, moveItem };

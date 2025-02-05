@@ -45,11 +45,13 @@
       <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#uploadFileModal">Upload File</button>
 
       <hr>
-      <ul class="list-group">
+      <ul class="list-group" id="folder-file-list">
         <% if (subfolders.length> 0 || files.length > 0) { %>
 
           <% subfolders.forEach(subfolder=> { %>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center draggable-item droppable-folder"
+              draggrable="true" data-id="<%= subfolder.id %>" data-type="folder">
               <a class="text-decoration-none" href="/folder/<%= subfolder.id %>">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                   <path fill="currentColor"
@@ -77,7 +79,8 @@
             <% }) %>
 
               <% files.forEach(file=> { %>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center draggable-item"
+                  draggable="true" data-id="<%= file.id %>" data-type="file">
                   <span><strong>
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                         <path fill="currentColor"
@@ -282,6 +285,54 @@
 
           document.getElementById("folderToRenameName").textContent = folderName;
           document.getElementById("renameFolderForm").action = "/folder/rename/" + folderId;
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const items = document.querySelectorAll(".draggable-item");
+        const folders = document.querySelectorAll(".droppable-folder");
+
+        let draggedItem = null;
+
+        items.forEach(item => {
+          item.addEventListener("dragstart", (e) => {
+            draggedItem = item;
+            e.dataTransfer.setData("id", item.getAttribute("data-id"));
+            e.dataTransfer.setData("type", item.getAttribute("data-type"));
+          });
+
+          item.addEventListener("dragend", () => {
+            draggedItem = null;
+          });
+        });
+
+        folders.forEach(folder => {
+          folder.addEventListener("dragover", (e) => {
+            e.preventDefault();
+          });
+
+          folder.addEventListener("drop", async (e) => {
+            e.preventDefault();
+
+            const itemId = e.dataTransfer.getData("id");
+            const itemType = e.dataTransfer.getData("type");
+            const targetFolderId = folder.getAttribute("data-id");
+
+            if (!itemId || !targetFolderId) return;
+
+
+            const response = await fetch("/move", {
+              method: "POST",
+              headers: {"Content-Type": "application/json"},
+              body: JSON.stringify({itemId, itemType, targetFolderId})
+            });
+
+            if (response.ok) {
+              location.reload();
+            } else {
+              alert("Error moving item");
+            }
+          });
         });
       });
     </script>

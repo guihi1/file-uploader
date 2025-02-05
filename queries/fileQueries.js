@@ -44,4 +44,21 @@ async function deleteFile(fileId) {
   });
 }
 
-export { getAllFilesInFolder, createFile, deleteFile, getFileById };
+async function changeFileFolder(fileId, folderId) {
+  return await prisma.file.update({
+    where: {
+      id: fileId,
+    },
+    data: {
+      folderId,
+    },
+  });
+}
+
+export {
+  changeFileFolder,
+  getAllFilesInFolder,
+  createFile,
+  deleteFile,
+  getFileById,
+};

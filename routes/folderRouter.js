@@ -36,4 +36,6 @@ router.post(
   folderController.folderRename,
 );
 
+router.post('/move', ensureAuthenticated, folderController.moveItem);
+
 export default router;
