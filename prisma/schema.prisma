@@ -46,6 +46,7 @@ model File {
   id           Int      @id @default(autoincrement())
   name         String
   path         String // Path or unique identifier for the file
+  size         Int
   folderId     Int // Foreign key to Folder
   userId       Int // Foreign key to User
   folder       Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
