@@ -34,6 +34,7 @@ const uploadFilePost = async (req, res) => {
         name: req.file.originalname,
         path: req.file.path,
         userId: req.user.id,
+        size: req.file.size,
         folderId: parseInt(folderId, 10),
       };
 

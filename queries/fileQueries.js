@@ -16,11 +16,12 @@ async function getAllFilesInFolder(folderId) {
   });
 }
 
-async function createFile({ name, path, userId, folderId }) {
+async function createFile({ name, path, size, userId, folderId }) {
   return await prisma.file.create({
     data: {
       name,
       path,
+      size,
       user: {
         connect: {
           id: userId,
