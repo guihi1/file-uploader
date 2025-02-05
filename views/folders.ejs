@@ -148,7 +148,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <form id="deleteFileForm" method="POST">
+              <form id="deleteFolderForm" method="POST">
                 <button type="submit" class="btn btn-danger">Delete</button>
               </form>
             </div>
@@ -169,7 +169,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <form id="deleteForm" method="POST">
+              <form id="deleteFileForm" method="POST">
                 <button type="submit" class="btn btn-danger">Delete</button>
               </form>
             </div>
@@ -229,7 +229,7 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        let deleteFileModal = document.getElementById("deleteModal");
+        let deleteFileModal = document.getElementById("deleteFileModal");
 
         deleteFileModal.addEventListener("show.bs.modal", function (event) {
           let button = event.relatedTarget;
